@@ -1,0 +1,44 @@
+{
+  "name": "@werker/request-cookie-store",
+  "version": "0.1.0",
+  "description": "An implementation of the Cookie Store API for request handlers",
+  "type": "module",
+  "main": "index.js",
+  "module": "index.js",
+  "files": [
+    "src",
+    "*.js*",
+    "*.d.ts*"
+  ],
+  "types": "./index.d.ts",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "clean": "rm -f *.d.ts *.js *.js.map *.d.ts.map",
+    "test": "echo \"Error: no test specified\" && exit 0",
+    "build": "tsc -d",
+    "prepack": "npm run clean && npm run build"
+  },
+  "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/worker-utils/request-cookie-store.git"
+  },
+  "bugs": {
+    "url": "https://github.com/worker-utils/request-cookie-store/issues"
+  },
+  "homepage": "https://github.com/worker-utils/request-cookie-store#readme",
+  "keywords": [
+    "cookies",
+    "cookie-store",
+    "middleware",
+    "cloudflare",
+    "cloudflare-workers",
+    "standards-adherence"
+  ]
+}
