@@ -1,6 +1,6 @@
 import { CookieInit } from './interface';
 
-export const attrsToSetCookie = (attrs: string[][]) => attrs.map(([name, value]) => `${name}=${value}`).join('; ');
+export const attrsToSetCookie = (attrs: string[][]) => attrs.map(att => att.join('=')).join('; ');
 
 /** Matches control characters */
 const RE_CONTROL = /\p{Cc}/u;
