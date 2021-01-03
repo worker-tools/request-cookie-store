@@ -32,25 +32,31 @@ export class RequestCookieStore implements CookieStore {
     this.#store = parseCookieHeader(cookie);
   }
 
-  async get(options: string | CookieStoreGetOptions): Promise<CookieListItem> {
+  get(name?: string): Promise<CookieListItem | null>;
+  get(options?: CookieStoreGetOptions): Promise<CookieListItem | null>;
+  async get(options?: string | CookieStoreGetOptions) {
     // FIXME
     if (typeof options !== 'string') throw Error('Overload not implemented.');
 
     return this.#store.has(options)
-      ? { name: options, value: this.#store.get(options) }
+      ? { name: options, value: <string>this.#store.get(options) }
       : null;
   }
 
-  async getAll(options?: string | CookieStoreGetOptions): Promise<CookieList> {
+  getAll(name?: string): Promise<CookieList>;
+  getAll(options?: CookieStoreGetOptions): Promise<CookieList>;
+  async getAll(options?: string | CookieStoreGetOptions) {
     // FIXME
     if (options != null) throw Error('Overload not implemented.');
 
     return [...this.#store.entries()].map(([name, value]) => ({ name, value }))
   }
 
+  set(name: string, value: string): Promise<void>;
+  set(options: CookieInit): Promise<void>;
   async set(options: string | CookieInit, value?: string) {
     const result = setCookie(options, value, this.#origin);
-    if (!result) return null;
+    if (!result) return;
 
     const [attributes, expires] = result;
     const [[name, val]] = attributes;
@@ -62,6 +68,8 @@ export class RequestCookieStore implements CookieStore {
       this.#store.set(name, val);
   }
 
+  delete(name: string): Promise<void>;
+  delete(options: CookieStoreDeleteOptions): Promise<void>;
   async delete(options: string | CookieStoreDeleteOptions) {
     // FIXME
     if (typeof options !== 'string') throw Error('Overload not implemented.');
@@ -81,7 +89,7 @@ export class RequestCookieStore implements CookieStore {
    * ```
    */
   get headers(): [string, string][] {
-    const headers = [];
+    const headers: [string, string][] = [];
     for (const attrs of this.#changes.values()) {
       headers.push(['Set-Cookie', attrsToSetCookie(attrs)]);
     }
@@ -95,8 +103,8 @@ export class RequestCookieStore implements CookieStore {
 
   /** Helper to turn a single `CookieInit` into a `set-cookie` string. */
   static toSetCookie(cookie: CookieInit): string {
-    const [attrs] = setCookie(cookie);
-    return attrsToSetCookie(attrs);
+    const x = setCookie(cookie);
+    return x ? attrsToSetCookie(x[0]) : '';
   }
 
   addEventListener(

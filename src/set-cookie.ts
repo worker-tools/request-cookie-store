@@ -5,11 +5,14 @@ export const attrsToSetCookie = (attrs: string[][]) => attrs.map(att => att.join
 /** Matches control characters */
 const RE_CONTROL = /\p{Cc}/u;
 
+type Attr = [string] | [string, string];
+type Attrs = [[string, string], ...Attr[]];
+
 /**
  * Implements <https://wicg.github.io/cookie-store/#set-a-cookie>
  * with some additional behaviors taken from Chrome's implementation.
  */
-export function setCookie(options: string | CookieInit, value?: string, origin?: URL): [string[][], Date | null] | null {
+export function setCookie(options: string | CookieInit, value?: string, origin?: URL | null): null | [Attrs, Date | null] {
   const [name, val] = (typeof options === 'string'
     ? [options, value]
     : [options.name, options.value]).map(x => x?.toString())
@@ -25,7 +28,7 @@ export function setCookie(options: string | CookieInit, value?: string, origin?:
   if (RE_CONTROL.test(name + val) || name.includes('=') || val.includes(';'))
     return null;
 
-  const attrs = [[name, val]];
+  const attrs: Attrs = [[name, val]];
   const host = origin?.host;
   let expires: Date | null = null;
 
@@ -95,10 +98,10 @@ export function setCookie(options: string | CookieInit, value?: string, origin?:
  * For more on the state of allowed cookie characters, 
  * see <https://stackoverflow.com/a/1969339/870615>.
  */
-export function parseCookieHeader(cookie: string) {
+export function parseCookieHeader(cookie?: string | null) {
   return new Map(cookie?.split(/;\s+/)
     .map(x => x.split('='))
-    .map(([n, ...vs]) => <[string, string]>[n.trim(), vs.join('=').trim()])
+    .map(([n, ...vs]) => [n.trim(), vs.join('=').trim()] as const)
     .filter(([n, v]) => !(n === '' && v === ''))
   );
 }
