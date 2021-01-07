@@ -22,14 +22,14 @@ import { setCookie, attrsToSetCookie, parseCookieHeader } from './set-cookie';
  */
 export class RequestCookieStore implements CookieStore {
   #origin: URL | null;
-  #store: Map<string, string> = new Map();
+  #map: Map<string, string> = new Map();
   #changes: Map<string, string[][]> = new Map();
 
   constructor(request: Request) {
     const origin = request.headers.get('origin');
     const cookie = request.headers.get('cookie');
     this.#origin = (origin && new URL(origin)) || null;
-    this.#store = parseCookieHeader(cookie);
+    this.#map = parseCookieHeader(cookie);
   }
 
   get(name?: string): Promise<CookieListItem | null>;
@@ -38,8 +38,8 @@ export class RequestCookieStore implements CookieStore {
     // FIXME
     if (typeof options !== 'string') throw Error('Overload not implemented.');
 
-    return this.#store.has(options)
-      ? { name: options, value: <string>this.#store.get(options) }
+    return this.#map.has(options)
+      ? { name: options, value: <string>this.#map.get(options) }
       : null;
   }
 
@@ -49,7 +49,7 @@ export class RequestCookieStore implements CookieStore {
     // FIXME
     if (options != null) throw Error('Overload not implemented.');
 
-    return [...this.#store.entries()].map(([name, value]) => ({ name, value }))
+    return [...this.#map.entries()].map(([name, value]) => ({ name, value }))
   }
 
   set(name: string, value: string): Promise<void>;
@@ -63,9 +63,9 @@ export class RequestCookieStore implements CookieStore {
     this.#changes.set(name, attributes);
 
     if (expires && expires < new Date())
-      this.#store.delete(name);
+      this.#map.delete(name);
     else
-      this.#store.set(name, val);
+      this.#map.set(name, val);
   }
 
   delete(name: string): Promise<void>;
@@ -98,7 +98,7 @@ export class RequestCookieStore implements CookieStore {
 
   /** Exports the entire cookie store as a `cookie` header string */
   toCookieString() {
-    return [...this.#store.entries()].map(x => x.join('=')).join('; ');
+    return [...this.#map.entries()].map(x => x.join('=')).join('; ');
   }
 
   /** Helper to turn a single `CookieInit` into a `set-cookie` string. */
