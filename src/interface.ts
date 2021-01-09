@@ -36,7 +36,7 @@ export interface CookieInit {
 export interface CookieStoreDeleteOptions {
   name: string;
   domain?: string | null;
-  path: string;
+  path?: string;
 }
 
 export interface CookieListItem {
