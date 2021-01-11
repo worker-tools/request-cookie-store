@@ -15,13 +15,19 @@ Aso see [the interface](./src/interface.ts) for more usage options.
 ```ts
 import { RequestCookieStore } from '@werker/request-cookie-store';
 
-example = new Request({ headers: { 'cookie': 'foo=bar; fizz=buzz' } });
+const example = new Request('/', { headers: { 'cookie': 'foo=bar; fizz=buzz' } });
 
 const cookieStore = new RequestCookieStore(example);
 ```
 
+We can now access cookie values from the store like so:
+
+```ts
+const value = (await cookieStore.get(name))?.value;
+```
+
 ### Fast Read Access
-To avoid using `(await cookieStore.get(name))?.value` for every read, parse all cookies into a `Map` once:
+To avoid using `await` for every read, we can parse all cookies into a `Map` once:
 
 ```ts
 type Cookies = ReadonlyMap<string, string>;
