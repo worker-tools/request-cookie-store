@@ -27,12 +27,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/worker-utils/request-cookie-store.git"
+    "url": "git+https://github.com/worker-tools/request-cookie-store.git"
   },
   "bugs": {
-    "url": "https://github.com/worker-utils/request-cookie-store/issues"
+    "url": "https://github.com/worker-tools/request-cookie-store/issues"
   },
-  "homepage": "https://github.com/worker-utils/request-cookie-store#readme",
+  "homepage": "https://github.com/worker-tools/request-cookie-store#readme",
   "keywords": [
     "cookies",
     "cookie-store",

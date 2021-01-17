@@ -4,7 +4,7 @@ An implementation of the [Cookie Store API](https://wicg.github.io/cookie-store)
 It uses the `Cookie` header of a request to populate the store and
 keeps a record of changes that can be exported as a list of `Set-Cookie` headers.
 
-It is intended as a cookie [middleware](https://github.com/worker-utils/middleware) for Cloudflare Workers, but perhaps there are other uses as well.
+It is intended as a cookie [middleware](https://github.com/worker-tools/middleware) for Cloudflare Workers, but perhaps there are other uses as well.
 
 ## Recipes 
 The following snippets should convey how this is intended to be used.
