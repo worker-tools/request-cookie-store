@@ -13,7 +13,7 @@ Aso see [the interface](./src/interface.ts) for more usage options.
 
 ### Creating a New Store
 ```ts
-import { RequestCookieStore } from '@werker/request-cookie-store';
+import { RequestCookieStore } from '@worker-tools/request-cookie-store';
 
 const example = new Request('/', { headers: { 'cookie': 'foo=bar; fizz=buzz' } });
 

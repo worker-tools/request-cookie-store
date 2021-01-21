@@ -1,5 +1,5 @@
 {
-  "name": "@werker/request-cookie-store",
+  "name": "@worker-tools/request-cookie-store",
   "version": "0.2.3",
   "description": "An implementation of the Cookie Store API for request handlers",
   "type": "module",
