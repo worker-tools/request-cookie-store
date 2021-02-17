@@ -28,6 +28,10 @@ export function setCookie(options: string | CookieInit, value?: string, origin?:
   if (RE_CONTROL.test(name + val) || name.includes('=') || val.includes(';'))
     return null;
 
+  if (val.includes(', ')) {
+    throw TypeError("The cookie value must not contain sequence: ', '.");
+  }
+
   const attrs: Attrs = [[name, val]];
   const host = origin?.host;
   let expires: Date | null = null;
