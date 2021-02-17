@@ -1,6 +1,6 @@
 {
   "name": "@worker-tools/request-cookie-store",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "An implementation of the Cookie Store API for request handlers",
   "type": "module",
   "main": "index.js",
