@@ -1,11 +1,6 @@
-import {
-  CookieStore,
-  CookieListItem,
-  CookieList,
-  CookieInit,
-  CookieStoreGetOptions,
-  CookieStoreDeleteOptions,
-} from "./interface";
+import { 
+  CookieStore, CookieListItem, CookieList, CookieInit, CookieStoreGetOptions, CookieStoreDeleteOptions,
+} from 'cookie-store-interface';
 
 import { setCookie, attrsToSetCookie, parseCookieHeader } from './set-cookie';
 
@@ -126,4 +121,4 @@ export class RequestCookieStore implements CookieStore {
   }
 }
 
-export * from './interface';
+export * from 'cookie-store-interface';

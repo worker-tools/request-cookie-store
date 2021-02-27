@@ -1,4 +1,4 @@
-import { CookieInit } from './interface';
+import { CookieInit } from 'cookie-store-interface';
 
 export const attrsToSetCookie = (attrs: string[][]) => attrs.map(att => att.join('=')).join('; ');
 

@@ -22,6 +22,9 @@
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
   "license": "MIT",
+  "dependencies": {
+    "cookie-store-interface": "^0.1.0"
+  },
   "devDependencies": {
     "typescript": "^4.0.3"
   },
