@@ -4,7 +4,8 @@ An implementation of the [Cookie Store API](https://wicg.github.io/cookie-store)
 It uses the `Cookie` header of a request to populate the store and
 keeps a record of changes that can be exported as a list of `Set-Cookie` headers.
 
-It is intended as a cookie [middleware](https://github.com/worker-tools/middleware) for Cloudflare Workers, but perhaps there are other uses as well.
+It is intended as a cookie middleware for Cloudflare Workers or other [Worker Environments][wks], but perhaps there are other uses as well.
+It is best combined with [**Signed Cookie Store**](https://github.com/worker-tools/signed-cookie-store) or [**Encrypted Cookie Store**](https://github.com/worker-tools/encrypted-cookie-store).
 
 ## Recipes 
 The following snippets should convey how this is intended to be used.
@@ -15,9 +16,10 @@ Aso see [the interface](./src/interface.ts) for more usage options.
 ```ts
 import { RequestCookieStore } from '@worker-tools/request-cookie-store';
 
-const example = new Request('/', { headers: { 'cookie': 'foo=bar; fizz=buzz' } });
+// Creating a request on the fly. Typically it will be provided by CF Workers, etc.
+const request = new Request('/', { headers: { 'cookie': 'foo=bar; fizz=buzz' } });
 
-const cookieStore = new RequestCookieStore(example);
+const cookieStore = new RequestCookieStore(request);
 ```
 
 We can now access cookie values from the store like so:
@@ -26,6 +28,8 @@ We can now access cookie values from the store like so:
 const value = (await cookieStore.get(name))?.value;
 ```
 
+This is a bit verbose, so we'll make it more ergonomic in the next step.
+
 ### Fast Read Access
 To avoid using `await` for every read, we can parse all cookies into a `Map` once:
 
@@ -33,8 +37,8 @@ To avoid using `await` for every read, we can parse all cookies into a `Map` onc
 type Cookies = ReadonlyMap<string, string>;
 
 const all = await cookieStore.getAll();
-const cookies: Cookies = new Map(all.map(({ name, value }) => [name, value]));
 
+new Map(all.map(({ name, value }) => [name, value])) as Cookies;
 // => Map { "foo" => "bar", "fizz" => "buzz" }
 ```
 
@@ -47,7 +51,7 @@ await cookieStore.set('fizz', 'bar');
 event.respondWith(new Response(null, cookieStore));
 ```
 
-Will produce the following HTTP:
+Will produce the following HTTP headers in Worker Environments that support multiple `Set-Cookie` headers:
 
 ```http
 HTTP/1.1 200 OK
@@ -56,27 +60,28 @@ set-cookie: foo=buzz
 set-cookie: fizz=bar
 ```
 
-Note that [due to the weirdness][1] of the Fetch API `Headers` class, inspecting the response in JS will not produce the intended result!
-However, _Cloudflare Workers do put the correct `Set-Cookie` headers on the network!_
+Note that [due to the weirdness][1] of the `Headers` class, inspecting the response in JS will not produce the intended result.
+<!-- However, _Cloudflare Workers do put the correct `Set-Cookie` headers on the network!_ -->
 
 
 ### Combine With Other Headers
-The above example uses a shortcut. To add additional headers to a response, you can do the following:
+The above example above exploits the fact that the cookie store will correctly destructure the `headers` key. 
+To add additional headers to a response, you can do the following:
 
 ```ts
 const response = new Response(null, {
   headers: [
-    ...new Headers({ 'X-Accept': 'app/json' }),
+    ...new Headers({ 'Accept': 'application/json' }),
     ...cookieStore.headers,
   ],
 });
-// or set imperatively:
-response.headers.set('X-Content-Type', 'app/json');
 ```
 
 [1]: https://fetch.spec.whatwg.org/#headers-class
 
 ## Disclaimers
-_This is not a polyfill! It is intended as a cookie middleware for Cloudflare Workers!_
+_This is not a polyfill! It is intended as a cookie middleware for Cloudflare Workers or other [Worker Environments][wks]!_
 
 [Due to the weirdness][1] of the Fetch API `Headers` class wrt `Set-Cookie` (or rather, the lack of special treatment), it is not likely to work in a Service Worker.
+
+[wks]: https://workers.js.org/

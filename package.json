@@ -30,7 +30,7 @@
     "cookie-store-interface": "^0.1.1"
   },
   "devDependencies": {
-    "typescript": "^4.2.2"
+    "typescript": "^4.6.3"
   },
   "repository": {
     "type": "git",
