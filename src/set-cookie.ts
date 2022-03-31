@@ -2,7 +2,7 @@ import { CookieInit } from 'cookie-store-interface';
 
 export const attrsToSetCookie = (attrs: string[][]) => attrs.map(att => att.join('=')).join('; ');
 
-/** Matches control characters */
+/** Matches control characters. TODO: more comprehensive list? */
 const RE_CONTROL = /\p{Cc}/u;
 
 type Attr = [string] | [string, string];
@@ -47,7 +47,7 @@ export function setCookie(options: string | CookieInit, value?: string, origin?:
         return null;
 
       if (d.startsWith('.'))
-        throw TypeError('Cookie dom cannot start with "."');
+        throw TypeError('Cookie domain cannot start with "."');
 
       if (host && !host.endsWith(`.${d}`))
         throw TypeError('Cookie dom must domain-match current host');

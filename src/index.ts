@@ -80,10 +80,10 @@ export class RequestCookieStore implements CookieStore {
    * 
    * Can be passed as the `headers` field when building a new `Response`:
    * ```ts
-   * new Response(body, { headers: cookieStore.headers })
+   * new Response(body, { headers: cookieStore.headers }) 
    * ```
    */
-  get headers(): [string, string][] {
+  get headers(): Iterable<[string, string]> {
     const headers: [string, string][] = [];
     for (const attrs of this.#changes.values()) {
       headers.push(['Set-Cookie', attrsToSetCookie(attrs)]);
@@ -96,7 +96,8 @@ export class RequestCookieStore implements CookieStore {
     return [...this.#map.entries()].map(x => x.join('=')).join('; ');
   }
 
-  /** Helper to turn a single `CookieInit` into a `set-cookie` string. */
+  /** Helper to turn a single `CookieInit` into a `set-cookie` string. 
+   * @deprecated Might remove/change name */
   static toSetCookie(cookie: CookieInit): string {
     const x = setCookie(cookie);
     return x ? attrsToSetCookie(x[0]) : '';

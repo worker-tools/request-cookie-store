@@ -20,8 +20,9 @@
   },
   "scripts": {
     "clean": "rm -f *.d.ts *.js *.js.map *.d.ts.map",
-    "test": "echo \"Error: no test specified\" && exit 0",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
     "build": "tsc -d",
+    "watch": "tsc -d -w",
     "prepack": "npm run clean && npm run build"
   },
   "author": "Florian Klampfer <mail@qwtel.com> (https://qwtel.com/)",
@@ -30,6 +31,11 @@
     "cookie-store-interface": "^0.1.1"
   },
   "devDependencies": {
+    "@types/jest": "^27.4.1",
+    "@worker-tools/location-polyfill": "workspace:^0.3.2-pre.1",
+    "jest": "^27.5.1",
+    "jest-environment-miniflare": "^2.3.0",
+    "miniflare": "^2.3.0",
     "typescript": "^4.6.3"
   },
   "repository": {
