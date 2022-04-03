@@ -31,6 +31,6 @@ jobs:
           node-version: 14
           registry-url: https://registry.npmjs.org/
       - run: deno run -A ./scripts/build_npm.ts
-      - run: cd ./npm && npm publish
+      - run: cd ./npm && npm pack
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
