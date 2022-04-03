@@ -30,6 +30,10 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 6
+          run_install: false
       - run: deno run -A ./scripts/build_npm.ts
       - run: cd ./npm && npm pack
         env:
