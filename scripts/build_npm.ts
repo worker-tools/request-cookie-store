@@ -1,14 +1,12 @@
+#!/usr/bin/env -S deno run -A
+
 // ex. scripts/build_npm.ts
 import { basename, extname } from "https://deno.land/std@0.133.0/path/mod.ts";
 import { build, emptyDir } from "https://deno.land/x/dnt/mod.ts";
 
-await emptyDir("./npm");
+import { latestVersion, copyMdFiles } from 'https://gist.githubusercontent.com/qwtel/ecf0c3ba7069a127b3d144afc06952f5/raw/20225e500beb4168c2ed44c2869acba1fb27bff3/latest-version.ts'
 
-async function latestVersion() {
-  return new TextDecoder().decode(
-    await Deno.run({ cmd: ['git', 'tag', '--sort=committerdate'], stdout: 'piped' }).output()
-  ).trim().split('\n').at(-1)?.replace(/^v/, '') ?? '0.0.1'
-}
+await emptyDir("./npm");
 
 const name = basename(Deno.cwd())
 
@@ -36,13 +34,13 @@ await build({
     bugs: {
       url: `https://github.com/worker-tools/${name}/issues`,
     },
+    homepage: `https://workers.tools/#${name}`,
+  },
+  packageManager: 'pnpm',
+  compilerOptions: {
+    sourceMap: true,
   },
 });
 
 // post build steps
-for await (const { isFile, name } of Deno.readDir('.')) {
-  if (isFile && extname(name) === '.md') {
-    console.log(`Copying ${name}...`)
-    await Deno.copyFile(name, `npm/${name}`);
-  }
-}
+await copyMdFiles()
