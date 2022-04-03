@@ -1,8 +1,9 @@
 import { 
   CookieStore, CookieListItem, CookieList, CookieInit, CookieStoreGetOptions, CookieStoreDeleteOptions,
-} from 'cookie-store-interface';
+} from 'https://esm.sh/cookie-store-interface@0.1.1/index.js';
+export * from 'https://esm.sh/cookie-store-interface@0.1.1/index.js';
 
-import { setCookie, attrsToSetCookie, parseCookieHeader } from './set-cookie';
+import { setCookie, attrsToSetCookie, parseCookieHeader } from './set-cookie.ts';
 
 /**
  * # Request Cookie Store
@@ -29,29 +30,29 @@ export class RequestCookieStore implements CookieStore {
 
   get(name?: string): Promise<CookieListItem | null>;
   get(options?: CookieStoreGetOptions): Promise<CookieListItem | null>;
-  async get(options?: string | CookieStoreGetOptions) {
+  get(options?: string | CookieStoreGetOptions): Promise<CookieListItem | null> {
     // FIXME
     if (typeof options !== 'string') throw Error('Overload not implemented.');
 
-    return this.#map.has(options)
+    return Promise.resolve(this.#map.has(options)
       ? { name: options, value: <string>this.#map.get(options) }
-      : null;
+      : null);
   }
 
   getAll(name?: string): Promise<CookieList>;
   getAll(options?: CookieStoreGetOptions): Promise<CookieList>;
-  async getAll(options?: string | CookieStoreGetOptions) {
+  getAll(options?: string | CookieStoreGetOptions): Promise<CookieList> {
     // FIXME
     if (options != null) throw Error('Overload not implemented.');
 
-    return [...this.#map.entries()].map(([name, value]) => ({ name, value }))
+    return Promise.resolve([...this.#map.entries()].map(([name, value]) => ({ name, value })))
   }
 
   set(name: string, value: string): Promise<void>;
   set(options: CookieInit): Promise<void>;
-  async set(options: string | CookieInit, value?: string) {
+  set(options: string | CookieInit, value?: string): Promise<void> {
     const result = setCookie(options, value, this.#origin);
-    if (!result) return;
+    if (!result) return Promise.resolve();
 
     const [attributes, expires] = result;
     const [[name, val]] = attributes;
@@ -61,11 +62,12 @@ export class RequestCookieStore implements CookieStore {
       this.#map.delete(name);
     else
       this.#map.set(name, val);
+    return Promise.resolve()
   }
 
   delete(name: string): Promise<void>;
   delete(options: CookieStoreDeleteOptions): Promise<void>;
-  async delete(options: string | CookieStoreDeleteOptions) {
+  delete(options: string | CookieStoreDeleteOptions): Promise<void> {
     // FIXME
     if (typeof options !== 'string') throw Error('Overload not implemented.');
 
@@ -73,6 +75,7 @@ export class RequestCookieStore implements CookieStore {
     const value = '';
     const sameSite = 'strict';
     this.set({ name: options, expires, value, sameSite });
+    return Promise.resolve();
   }
 
   /** 
@@ -83,7 +86,7 @@ export class RequestCookieStore implements CookieStore {
    * new Response(body, { headers: cookieStore.headers }) 
    * ```
    */
-  get headers(): Iterable<[string, string]> {
+  get headers(): [string, string][] {
     const headers: [string, string][] = [];
     for (const attrs of this.#changes.values()) {
       headers.push(['Set-Cookie', attrsToSetCookie(attrs)]);
@@ -104,22 +107,21 @@ export class RequestCookieStore implements CookieStore {
   }
 
   addEventListener(
-    type: string,
-    listener: EventListenerOrEventListenerObject,
-    options?: boolean | AddEventListenerOptions
+    _type: string,
+    _listener: EventListenerOrEventListenerObject,
+    _options?: boolean | AddEventListenerOptions
   ): void {
     throw new Error("Method not implemented.")
   }
-  dispatchEvent(event: Event): boolean {
+  dispatchEvent(_event: Event): boolean {
     throw new Error("Method not implemented.")
   }
   removeEventListener(
-    type: string,
-    callback: EventListenerOrEventListenerObject,
-    options?: boolean | EventListenerOptions
+    _type: string,
+    _callback: EventListenerOrEventListenerObject,
+    _options?: boolean | EventListenerOptions
   ): void {
     throw new Error("Method not implemented.")
   }
 }
 
-export * from 'cookie-store-interface';
