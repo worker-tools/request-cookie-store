@@ -39,6 +39,7 @@ await build({
   packageManager: 'pnpm',
   compilerOptions: {
     sourceMap: true,
+    target: 'ES2021'
   },
 });
 
