@@ -1,7 +1,7 @@
 import { 
   CookieStore, CookieListItem, CookieList, CookieInit, CookieStoreGetOptions, CookieStoreDeleteOptions,
-} from 'https://esm.sh/cookie-store-interface@0.1.1/index.js';
-export * from 'https://esm.sh/cookie-store-interface@0.1.1/index.js';
+} from 'https://ghuc.cc/qwtel/cookie-store-interface/index.d.ts';
+export * from 'https://ghuc.cc/qwtel/cookie-store-interface/index.d.ts';
 
 import { setCookie, attrsToSetCookie, parseCookieHeader } from './set-cookie.ts';
 

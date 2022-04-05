@@ -40,10 +40,10 @@ await build({
   packageManager: 'pnpm',
   compilerOptions: {
     sourceMap: true,
-    target: 'ES2021'
+    target: 'ES2019'
   },
   mappings: {
-    "https://esm.sh/cookie-store-interface@0.1.1/index.js": {
+    "https://ghuc.cc/qwtel/cookie-store-interface/index.d.ts": {
       name: "cookie-store-interface",
       version: "^0.1.1",
     },
