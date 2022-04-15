@@ -5,7 +5,7 @@ It uses the `Cookie` header of a request to populate the store and
 keeps a record of changes that can be exported as a list of `Set-Cookie` headers.
 
 It is intended as a cookie middleware for Cloudflare Workers or other [Worker Environments][wks], but perhaps there are other uses as well.
-It is best combined with [**Signed Cookie Store**](./signed-cookie-store) or [**Encrypted Cookie Store**](./encrypted-cookie-store).
+It is best combined with [**Signed Cookie Store**](https://workers.tools/#signed-cookie-store) or [**Encrypted Cookie Store**](https://workers.tools/#encrypted-cookie-store).
 
 ## Recipes 
 The following snippets should convey how this is intended to be used.
