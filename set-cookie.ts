@@ -1,4 +1,4 @@
-import { CookieInit } from 'https://ghuc.cc/qwtel/cookie-store-interface/index.ts';
+import type { CookieInit } from 'https://ghuc.cc/qwtel/cookie-store-interface/index.d.ts';
 
 export const attrsToSetCookie = (attrs: string[][]) => attrs.map(att => att.join('=')).join('; ');
 

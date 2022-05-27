@@ -1,7 +1,7 @@
-import { 
+import type { 
   CookieStore, CookieListItem, CookieList, CookieInit, CookieStoreGetOptions, CookieStoreDeleteOptions,
-} from 'https://ghuc.cc/qwtel/cookie-store-interface/index.ts';
-export * from 'https://ghuc.cc/qwtel/cookie-store-interface/index.ts';
+} from 'https://ghuc.cc/qwtel/cookie-store-interface/index.d.ts';
+export * from 'https://ghuc.cc/qwtel/cookie-store-interface/index.d.ts';
 
 import { setCookie, attrsToSetCookie, parseCookieHeader } from './set-cookie.ts';
 
