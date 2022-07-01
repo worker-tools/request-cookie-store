@@ -151,3 +151,20 @@ test('httpOnly', () => {
   const setCookie = new Headers(store.headers).get('set-cookie')!
   assertEquals(setCookie, 'foo=bar; HttpOnly')
 })
+
+test('domain', () => {
+  const store = new RequestCookieStore(new Request('https://example.com/'))
+  store.set({ name: 'foo', value: 'bar', domain: 'sub.example.com' })
+  const setCookie = new Headers(store.headers).get('set-cookie')!
+  assertEquals(setCookie, 'foo=bar; Domain=sub.example.com; Secure')
+})
+
+test('domain II', () => {
+  const store = new RequestCookieStore(new Request('https://example.com/'))
+  assertRejects(() => store.set({ name: 'foo', value: 'bar', domain: '.example.com' }))
+})
+
+test('domain III', () => {
+  const store = new RequestCookieStore(new Request('https://example.com/'))
+  assertRejects(() => store.set({ name: 'foo', value: 'bar', domain: 'other-example.com' }))
+})

@@ -15,14 +15,14 @@ import { setCookie, attrsToSetCookie, parseCookieHeader } from './set-cookie.ts'
  * and perhaps some other uses.
  */
 export class RequestCookieStore implements CookieStore {
-  #origin: URL | null;
+  #origin?: URL;
   #map: Map<string, string> = new Map();
   #changes: Map<string, string[][]> = new Map();
 
   constructor(request: Request) {
-    const origin = request.headers.get('origin');
+    const origin = request.headers.get('origin') || request.url;
     const cookie = request.headers.get('cookie');
-    this.#origin = (origin && new URL(origin)) || null;
+    if (origin) this.#origin = new URL(origin);
     this.#map = parseCookieHeader(cookie);
   }
 

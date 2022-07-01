@@ -22,7 +22,7 @@ type Attrs = [[string, string], ...Attr[]];
 export function setCookie(
   options: string | CookieInit,
   value?: string,
-  origin?: URL | null,
+  origin?: URL,
   encode = (x?: string) => x?.toString() ?? '',
 ): [Attrs, Date | null] | null {
   const [name, val] = (typeof options === 'string'
@@ -59,7 +59,7 @@ export function setCookie(
       throw TypeError('Cookie domain cannot start with "."');
 
     const host = origin?.host;
-    if (host && !host.endsWith(`.${domain}`))
+    if (host && !domain.endsWith(`.${host}`))
       throw TypeError('Cookie domain must match current host');
 
     attrs.push(['Domain', domain]);
