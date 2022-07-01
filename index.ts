@@ -6,9 +6,7 @@ export * from 'https://ghuc.cc/qwtel/cookie-store-interface/index.d.ts';
 import { setCookie, attrsToSetCookie, parseCookieHeader } from './set-cookie.ts';
 
 /**
- * # Request Cookie Store
- * An implementation of the [Cookie Store API](https://wicg.github.io/cookie-store)
- * for request handlers. 
+ * An implementation of the [Cookie Store API](https://wicg.github.io/cookie-store) for request handlers. 
  * 
  * It uses the `Cookie` header of a request to populate the store and
  * keeps a record of changes that can be exported as a list of `Set-Cookie` headers.
@@ -35,7 +33,7 @@ export class RequestCookieStore implements CookieStore {
     if (typeof options !== 'string') throw Error('Overload not implemented.');
 
     return Promise.resolve(this.#map.has(options)
-      ? { name: options, value: <string>this.#map.get(options) }
+      ? { name: options, value: this.#map.get(options)! }
       : null);
   }
 
@@ -45,7 +43,7 @@ export class RequestCookieStore implements CookieStore {
     // FIXME
     if (options != null) throw Error('Overload not implemented.');
 
-    return Promise.resolve([...this.#map.entries()].map(([name, value]) => ({ name, value })))
+    return Promise.resolve([...this.#map].map(([name, value]) => ({ name, value })))
   }
 
   set(name: string, value: string): Promise<void>;
@@ -73,8 +71,7 @@ export class RequestCookieStore implements CookieStore {
 
     const expires = new Date(0);
     const value = '';
-    const sameSite = 'strict';
-    this.set({ name: options, expires, value, sameSite });
+    this.set({ name: options, value, expires });
     return Promise.resolve();
   }
 
@@ -96,7 +93,7 @@ export class RequestCookieStore implements CookieStore {
 
   /** Exports the entire cookie store as a `cookie` header string */
   toCookieString() {
-    return [...this.#map.entries()].map(x => x.join('=')).join('; ');
+    return [...this.#map].map(x => x.join('=')).join('; ');
   }
 
   /** Helper to turn a single `CookieInit` into a `set-cookie` string. 

@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-unused-vars
 import 'https://gist.githubusercontent.com/qwtel/b14f0f81e3a96189f7771f83ee113f64/raw/TestRequest.ts'
 import { 
   assert,
@@ -96,4 +97,18 @@ test('cookie values with =', async () => {
 test("cookie values with ', ' sequence", () => {
   const store = new RequestCookieStore(request)
   assertRejects(() => store.set('foo', "a, b, c"), TypeError)
+})
+
+test('no control characters', async () => {
+  const store = new RequestCookieStore(request)
+  store.set('ctrl', "\0") // NUL
+  store.set('ctrl', "\x07") // BEL
+  store.set('ctrl', "\x08") // BS
+  store.set('ctrl', "\x7F") // DELETE
+  store.set('ctrl', '\x1B') // ESCAPE
+  store.set('ctrl', "\x1E")
+  store.set('ctrl', "\x1F")
+  // store.set('ctrl', "\x80")
+  // store.set('ctrl', "\x9F")
+  assertEquals(await store.get('ctrl'), null)
 })
