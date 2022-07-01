@@ -68,10 +68,7 @@ export class RequestCookieStore implements CookieStore {
   delete(options: string | CookieStoreDeleteOptions): Promise<void> {
     // FIXME
     if (typeof options !== 'string') throw Error('Overload not implemented.');
-
-    const expires = new Date(0);
-    const value = '';
-    this.set({ name: options, value, expires });
+    this.set({ name: options, value: '', expires: new Date(0) });
     return Promise.resolve();
   }
 

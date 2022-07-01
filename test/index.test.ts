@@ -18,7 +18,6 @@ test('exists', () => {
 })
 
 const request = new Request('/', {
-  method: 'POST',
   headers: {
     'Cookie': 'foo=bar; user=bert; no=mad',
   },
@@ -67,7 +66,7 @@ test('deleting cookies set-cookie header', async () => {
   await store.delete('foo')
   const setCookie = new Headers(store.headers).get('set-cookie')!
   assertStringIncludes(setCookie, 'foo=;')
-  assertStringIncludes(setCookie, 'Expires=Thu, 01 Jan 1970 00:00:00 GMT;')
+  assertStringIncludes(setCookie, 'Expires=Thu, 01 Jan 1970 00:00:00 GMT')
 })
 
 test('stringifying to cookie string', () => {
@@ -111,4 +110,44 @@ test('no control characters', async () => {
   // store.set('ctrl', "\x80")
   // store.set('ctrl', "\x9F")
   assertEquals(await store.get('ctrl'), null)
+})
+
+test('no defaults', () => {
+  const store = new RequestCookieStore(new Request('/'))
+  store.set('foo', 'bar')
+  const setCookie = new Headers(store.headers).get('set-cookie')!
+  assertEquals(setCookie, 'foo=bar')
+})
+
+test('no defaults II', () => {
+  const store = new RequestCookieStore(new Request('/'))
+  store.set({ name: 'foo', value: 'bar' })
+  const setCookie = new Headers(store.headers).get('set-cookie')!
+  assertEquals(setCookie, 'foo=bar')
+})
+
+test('with path', () => {
+  const store = new RequestCookieStore(new Request('/'))
+  store.set({ name: 'foo', value: 'bar', path: '/' })
+  const setCookie = new Headers(store.headers).get('set-cookie')!
+  assertEquals(setCookie, 'foo=bar; Path=/')
+})
+
+test('paths must start with /', () => {
+  const store = new RequestCookieStore(new Request('/'))
+  assertRejects(() => store.set({ name: 'foo', value: 'bar', path: 'index.html' }))
+})
+
+test('sameSite', () => {
+  const store = new RequestCookieStore(new Request('/'))
+  store.set({ name: 'foo', value: 'bar', sameSite: 'lax' })
+  const setCookie = new Headers(store.headers).get('set-cookie')!
+  assertEquals(setCookie, 'foo=bar; SameSite=Lax')
+})
+
+test('httpOnly', () => {
+  const store = new RequestCookieStore(new Request('/'))
+  store.set({ name: 'foo', value: 'bar', httpOnly: true })
+  const setCookie = new Headers(store.headers).get('set-cookie')!
+  assertEquals(setCookie, 'foo=bar; HttpOnly')
 })

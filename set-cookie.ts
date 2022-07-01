@@ -48,7 +48,7 @@ export function setCookie(
 
   const attrs: Attrs = [[name, val]];
 
-  const { domain, path = '/', sameSite = 'lax' } = opts;
+  const { domain, path, sameSite } = opts;
 
   if (domain) {
     // Unspecified, emulating Chrome's current behavior 
@@ -73,17 +73,18 @@ export function setCookie(
     attrs.push(['Expires', expires.toUTCString()]);
   }
 
-  if (!path?.toString().startsWith('/'))
-    throw TypeError('Cookie path must start with "/"');
+  if (path) {
+    if (!path.toString().startsWith('/'))
+      throw TypeError('Cookie path must start with "/"');
 
-  // Unspecified, emulating Chrome's current behavior 
-  if (!RE_FIELD_CONTENT.test(path) || path.includes(';'))
-    return null;
+    // Unspecified, emulating Chrome's current behavior 
+    if (!RE_FIELD_CONTENT.test(path) || path.includes(';'))
+      return null;
 
-  attrs.push(['Path', path]);
+    attrs.push(['Path', path]);
+  }
 
-  // Altercated to allow for missing origin
-  // TODO: should that be a thing?
+  // Always secure, except for localhost
   if (origin && origin.hostname !== 'localhost')
     attrs.push(['Secure']);
 
@@ -91,6 +92,7 @@ export function setCookie(
     attrs.push(['HttpOnly']);
 
   switch (sameSite) {
+    case undefined: break;
     case 'none': attrs.push(['SameSite', 'None']); break;
     case 'lax': attrs.push(['SameSite', 'Lax']); break;
     case 'strict': attrs.push(['SameSite', 'Strict']); break;
