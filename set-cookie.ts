@@ -59,7 +59,7 @@ export function setCookie(
       throw TypeError('Cookie domain cannot start with "."');
 
     const host = origin?.host;
-    if (host && !domain.endsWith(`.${host}`))
+    if (host && domain !== host && !domain.endsWith(`.${host}`))
       throw TypeError('Cookie domain must match current host');
 
     attrs.push(['Domain', domain]);

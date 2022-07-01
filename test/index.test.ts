@@ -159,6 +159,13 @@ test('domain', () => {
   assertEquals(setCookie, 'foo=bar; Domain=sub.example.com; Secure')
 })
 
+test('same domain', () => {
+  const store = new RequestCookieStore(new Request('https://example.com/'))
+  store.set({ name: 'foo', value: 'bar', domain: 'example.com' })
+  const setCookie = new Headers(store.headers).get('set-cookie')!
+  assertEquals(setCookie, 'foo=bar; Domain=example.com; Secure')
+})
+
 test('domain II', () => {
   const store = new RequestCookieStore(new Request('https://example.com/'))
   assertRejects(() => store.set({ name: 'foo', value: 'bar', domain: '.example.com' }))
