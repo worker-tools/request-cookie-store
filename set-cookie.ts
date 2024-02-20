@@ -84,8 +84,8 @@ export function setCookie(
     attrs.push(['Path', path]);
   }
 
-  // Always secure, except for localhost
-  if (origin && origin.hostname !== 'localhost')
+  // Always secure when isn't localhost or samesite is set
+  if (origin?.hostname !== 'localhost' || sameSite !== undefined)
     attrs.push(['Secure']);
 
   if (opts.httpOnly)
